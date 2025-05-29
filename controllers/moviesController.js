@@ -12,7 +12,25 @@ const show = (req, res) => {
     // get id
     const id = req.params.id;
 
-    res.send(`This is the show page. ID: ${id}`);
+    // query
+    const movieSql = 'SELECT * FROM movies WHERE id = ?';
+    const reviewSql = 'SELECT * FROM reviews WHERE movie_id = ?';
+
+    // execute query
+    connection.query(movieSql, [id], (err, movie) => {
+        if (err) throw err;
+
+        // get reviews
+        connection.query(reviewSql, [id], (err, reviews) => {
+            if (err) throw err;
+
+            // add reviews to movie
+            movie[0].reviews = reviews;
+
+            // send movie data
+            res.send(movie);
+        })
+    })
 }
 
 const store = (req, res) => {
