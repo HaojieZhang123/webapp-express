@@ -2,7 +2,10 @@
 const connection = require('../data/db');
 
 const index = (req, res) => {
-    res.send('This is the index page');
+    connection.query('SELECT * FROM movies', (err, results) => {
+        if (err) throw err;
+        res.send(results);
+    })
 }
 
 const show = (req, res) => {
