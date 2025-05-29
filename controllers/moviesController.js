@@ -22,7 +22,7 @@ const show = (req, res) => {
     const id = req.params.id;
 
     // query
-    const movieSql = 'SELECT * FROM movies WHERE id = ?';
+    const movieSql = 'SELECT movies.*, AVG(reviews.vote) AS vote FROM movies JOIN reviews ON movies.id = reviews.movie_id WHERE movies.id = ? GROUP BY movies.id';
     const reviewSql = 'SELECT * FROM reviews WHERE movie_id = ?';
 
     // execute query
