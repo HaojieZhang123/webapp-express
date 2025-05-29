@@ -2,9 +2,18 @@
 const connection = require('../data/db');
 
 const index = (req, res) => {
-    connection.query('SELECT * FROM movies', (err, results) => {
+    connection.query('SELECT * FROM movies', (err, response) => {
         if (err) throw err;
-        res.send(results);
+
+        // modify image path with complete path
+        const movies = response.map((movie) => {
+            const obj = { ...movie, }
+            obj.image = req.imagePath + obj.image
+
+            return obj;
+        })
+
+        res.send(movies);
     })
 }
 
@@ -17,18 +26,30 @@ const show = (req, res) => {
     const reviewSql = 'SELECT * FROM reviews WHERE movie_id = ?';
 
     // execute query
-    connection.query(movieSql, [id], (err, movie) => {
+    connection.query(movieSql, [id], (err, response) => {
         if (err) throw err;
+
+        // check if movie exists
+        if (response.length === 0 || !response) {
+            return res.status(404).send({
+                error: 'Not Found',
+                message: 'Movie not found'
+            })
+        }
+
 
         // get reviews
         connection.query(reviewSql, [id], (err, reviews) => {
             if (err) throw err;
 
             // add reviews to movie
-            movie[0].reviews = reviews;
+            response[0].reviews = reviews;
 
             // send movie data
-            res.send(movie);
+            res.send({
+                ...response[0],
+                image: req.imagePath + response[0].image
+            });
         })
     })
 }
