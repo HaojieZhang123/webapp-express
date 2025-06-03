@@ -10,6 +10,12 @@ const errorHandler = require('./middlewares/errorHandler');
 const notFound = require('./middlewares/notFound');
 const imagePath = require('./middlewares/imagePath');
 
+// cors
+const cors = require('cors');
+app.use(cors({
+    origin: process.env.FE_APP
+}));
+
 // use middlewares
 app.use(imagePath);
 
