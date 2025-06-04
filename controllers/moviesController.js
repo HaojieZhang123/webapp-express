@@ -55,7 +55,24 @@ const show = (req, res) => {
 }
 
 const store = (req, res) => {
-    res.send('This is the store page');
+    // get data
+    const { title, director, genre, release_year, abstract, image } = req.body;
+
+    // get image name
+    const imageName = req.file.filename;
+
+    // query
+    const sql = 'INSERT INTO movies (title, director, genre, release_year, abstract, image) VALUES (?, ?, ?, ?, ?, ?)';
+
+    // execute query
+    connection.query(sql, [title, director, genre, release_year, abstract, imageName], (err, response) => {
+        if (err) throw err;
+
+        res.status(201).send({
+            status: 'success',
+            message: 'Movie stored successfully'
+        });
+    })
 }
 
 const update = (req, res) => {
