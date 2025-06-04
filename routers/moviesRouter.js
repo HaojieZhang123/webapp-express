@@ -15,4 +15,7 @@ router.put('/:id', moviesController.update);
 router.patch('/:id', moviesController.modify);
 router.delete('/:id', moviesController.destroy);
 
+// reviews
+router.post('/:id/reviews', moviesController.reviewStore);
+
 module.exports = router;

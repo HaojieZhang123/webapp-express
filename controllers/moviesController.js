@@ -75,6 +75,27 @@ const store = (req, res) => {
     })
 }
 
+// review post
+const reviewStore = (req, res) => {
+    // get id
+    const { id } = req.params;
+    // get data
+    const { name, vote, text } = req.body;
+
+    // query
+    const sql = 'INSERT INTO reviews (movie_id, name, vote, text) VALUES (?, ?, ?, ?)';
+
+    // execute query
+    connection.query(sql, [id, name, vote, text], (err, response) => {
+        if (err) throw err;
+
+        res.status(201).send({
+            status: 'success',
+            message: 'Review stored successfully'
+        });
+    })
+}
+
 const update = (req, res) => {
     res.send('This is the update page');
 }
@@ -91,6 +112,7 @@ module.exports = {
     index,
     show,
     store,
+    reviewStore,
     update,
     modify,
     destroy
